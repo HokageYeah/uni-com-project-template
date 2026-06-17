@@ -24,7 +24,7 @@ function getAvatorUrl(_uid?: string, _size?: string, _rand?: boolean) {
     }
   }
 
-  let avatorUrl = `//pic.xxt.cn${avatorUrlPrefix}_${_size}.gif`;
+  let avatorUrl = `//pic.demo.cn${avatorUrlPrefix}_${_size}.gif`;
   if (_rand !== false) {
     // 增加防缓存参数
     const now = new Date();
@@ -76,7 +76,7 @@ function parseTime(time: Date | string | number, cFormat: string) {
     h: date.getHours(),
     i: date.getMinutes(),
     s: date.getSeconds(),
-    a: date.getDay()
+    a: date.getDay(),
   };
   const time_str = format.replace(/{([ymdhisa])+}/g, (result, key) => {
     const value = formatObj[key];
@@ -264,7 +264,7 @@ function toast(data: {
   uni.showToast({
     duration: data.duration || 2000,
     title: data.title || '出错啦~',
-    icon: data.icon || 'none'
+    icon: data.icon || 'none',
   });
 }
 
@@ -309,20 +309,20 @@ function noToChinese(str: any) {
         /0+$/g.test(_str) && (prefix += match[10]); // 处理单元内后半部分有零的地方
         return +_str
           ? _str.replace(/(\d)(\d)(\d)(\d)/g, ($0, $1, $2, $3, $4) => {
-            !match[$1] &&
+              !match[$1] &&
                 (match[$2] ? ($1 = 10) : match[$3] ? ($2 = 10) : match[$4] ? ($3 = 10) : ''); // 处理相邻单元前半部分
-            // eslint-disable-next-line max-len
-            match[$1] && match[$3] && !match[$2] && ($2 = 10),
-            match[$2] && match[$4] && !match[$3] && ($3 = 10),
-            match[$1] && match[$4] && !match[$3] && !match[$2] && ($3 = 10); // 中间两个连续为0，只是获取最后一个
-            return (
-              (match[$1] && ($1 < 10 ? `${match[$1]}千` : match[$1])) +
+              // eslint-disable-next-line max-len
+              match[$1] && match[$3] && !match[$2] && ($2 = 10),
+                match[$2] && match[$4] && !match[$3] && ($3 = 10),
+                match[$1] && match[$4] && !match[$3] && !match[$2] && ($3 = 10); // 中间两个连续为0，只是获取最后一个
+              return (
+                (match[$1] && ($1 < 10 ? `${match[$1]}千` : match[$1])) +
                 (match[$2] && ($2 < 10 ? `${match[$2]}百` : match[$2])) +
                 (match[$3] &&
                   ($3 < 10 ? (Number($3) === 1 ? '十' : `${match[$3]}十`) : match[$3])) +
                 (match[$4] && match[$4])
-            );
-          }) + prefix
+              );
+            }) + prefix
           : prefix;
       })
       .replace(/^零*/g, '')
@@ -364,7 +364,7 @@ function handleListByDate(list: Array<any>, dateKey = 'sendDate') {
 
 /**
  * 根据 hostId 判断是否是安卓app
- * https://gitlab.xxt.cn/app/android/xxtapp/app/-/wikis/HostId%E6%B8%85%E5%8D%95
+ * https://gitlab.demo.cn/app/android/xxtapp/app/-/wikis/HostId%E6%B8%85%E5%8D%95
  * @returns 是否是xxt安卓app
  */
 function isXxtAndroidApp(hId?: string) {
@@ -374,7 +374,7 @@ function isXxtAndroidApp(hId?: string) {
 }
 /**
  * 根据 hostId 判断是否是iOS app
- * https://gitlab.xxt.cn/app/android/xxtapp/app/-/wikis/HostId%E6%B8%85%E5%8D%95
+ * https://gitlab.demo.cn/app/android/xxtapp/app/-/wikis/HostId%E6%B8%85%E5%8D%95
  * @returns 是否是xxt iOS app
  */
 function isXxtIOSApp(hId?: string) {
@@ -416,5 +416,5 @@ export default {
   handleListByDate,
   isXxtAndroidApp,
   isXxtIOSApp,
-  getDatesBetween
+  getDatesBetween,
 };

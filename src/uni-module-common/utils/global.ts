@@ -6,10 +6,10 @@
 import { reactive } from 'vue';
 import { apiBaseUrl, appModuleConfig } from '@/uni-module-common/config/';
 export const globalData = reactive({
-  // baseRestUrl: 'https://rest-test.xxt.cn',
+  // baseRestUrl: 'https://rest-test.demo.cn',
   baseRestUrl: apiBaseUrl,
   wss: 'ws://192.168.3.119:8000',
-  baseLoginUrl: 'https://login.xxt.cn',
+  baseLoginUrl: 'https://login.demo.cn',
 
   // 用于登录相关的入库设置
   entry: appModuleConfig.entry || 'wxmp_read',
@@ -50,46 +50,46 @@ export const globalData = reactive({
     // 用户班级  学生身份时存在
     classInfo: {
       classId: null,
-      className: null
+      className: null,
     },
     // 学校信息  网站注册身份时为空
     schoolInfo: {
       schoolId: null,
-      schoolName: null
+      schoolName: null,
     },
     gradeInfo: {
       gradeId: null,
       gradeName: null,
-      gradeCode: null
+      gradeCode: null,
     },
-    termCode: null
+    termCode: null,
   },
 
   // 目前正在用的信息
   deafultGradeTerm: {
     grade: {
       code: 21,
-      desc: 'L1'
+      desc: 'L1',
     },
     term: {
       code: 1,
-      desc: '上学期'
-    }
+      desc: '上学期',
+    },
   },
   UniToUniParams: {
     from: 'uniapp',
     taskSubType: null,
-    resourceList: null
+    resourceList: null,
   },
   // 全局初始化
   init() {
     // 全局变量（默认是生产环境 URL）
     // uni.$baseUrl = {
     //   // 正式的域名
-    //   baseCephUrl: 'https://obs-prod.xxt.cn',
-    //   // baseCephUrl: 'https://obs.xxt.cn',
-    //   baseRestUrl: 'https://rest.xxt.cn',
-    //   baseLoginUrl: 'https://login.xxt.cn'
+    //   baseCephUrl: 'https://obs-prod.demo.cn',
+    //   // baseCephUrl: 'https://obs.demo.cn',
+    //   baseRestUrl: 'https://rest.demo.cn',
+    //   baseLoginUrl: 'https://login.demo.cn'
     // };
 
     // 挂载
@@ -119,7 +119,7 @@ export const globalData = reactive({
       fail(e) {
         console.log(e);
         console.log('play fail');
-      }
+      },
     });
-  }
+  },
 });

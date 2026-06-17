@@ -2,7 +2,7 @@ import { natToUniBridgeToH5, uniToNatBridgeToH5 } from './uniToNavProtocol';
 import { uniToAppPluginBridge } from './uniToAppPluginBridge';
 import bridge from '@/uni-module-common/utils/uniToNativeBridge';
 
-const baseUrl = 'https://m.xxt.cn';
+const baseUrl = 'https://m.demo.cn';
 
 // 所有的页面 新增unimpUrl参数。地址为你需要跳转的uni地址。例如：&unimpUrl=pages/detail/test
 // 选择课文朗读资源（教师端）
@@ -85,7 +85,7 @@ export const goToH5 = (h5Url = '') => {
   // #ifdef APP-PLUS || APP-PLUS
   bridge
     .sendNativeEvent(uniToNatBridgeToH5, {
-      h5Url
+      h5Url,
     })
     .then((res) => {
       uni.$emit(natToUniBridgeToH5, res);
@@ -258,7 +258,7 @@ export const mathClassPracticeStuAnswerReportH5 = (paramsStr = '') => {
 // 插件方式
 export const goToH5Plug = (h5Url = '') => {
   uniToAppPluginBridge.gotoWebView({
-    h5Url
+    h5Url,
   });
 };
 export const readResourceSelectH5Plugs = (paramsStr = '') => {

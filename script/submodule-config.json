@@ -1,12 +1,12 @@
 [
   {
     "path": "src/uni-module-common",
-    "url": "https://gitlab.xxt.cn/frontend/uni-app/uni-module-common.git",
+    "url": "",
     "branch": "master"
   },
   {
     "path": "src/uni_modules/uni-module-public",
-    "url": "https://gitlab.xxt.cn/frontend/uni-app/uni-module-public.git",
+    "url": "",
     "branch": "master"
   }
 ]

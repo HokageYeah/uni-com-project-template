@@ -43,29 +43,29 @@ const props = defineProps({
   // 预留字段；调用支付弹框的应用或业务，用于兼容不同业务的处理逻辑，一般使用首字母缩写，如 众享阅读：zxyd
   enterApp: {
     type: String,
-    default: 'zxyd'
+    default: 'zxyd',
   },
   // 展示支付弹框
   showPaycash: {
     type: Boolean,
-    default: false
+    default: false,
   },
   // 是否展示微信支付
   showWxPay: {
     type: Boolean,
-    default: false
+    default: false,
   },
   // 是否展示支付宝支付
   showAliPay: {
     type: Boolean,
-    default: false
+    default: false,
   },
   // 预支付订单信息  orderId: 订单ID, orderName: 订单名, payStatus: 支付状态
   orderInfo: {
     type: Object,
     default() {
       return {};
-    }
+    },
   },
   /**
    * 扩展信息
@@ -81,8 +81,8 @@ const props = defineProps({
     type: Object,
     default() {
       return {};
-    }
-  }
+    },
+  },
 });
 const emits = defineEmits(['update:showPaycash', 'showWxH5Dialog', 'changePaycash', 'payResult']);
 const { userAgent, isLogin } = useStore('user');
@@ -93,9 +93,9 @@ const paycash = computed({
   },
   set(val) {
     emits('update:showPaycash', val);
-  }
+  },
 });
-// hostId 清单 https://gitlab.xxt.cn/app/android/xxtapp/app/-/wikis/HostId%E6%B8%85%E5%8D%95
+// hostId 清单 https://gitlab.demo.cn/app/android/demoapp/app/-/wikis/HostId%E6%B8%85%E5%8D%95
 const isXxtIOSApp = computed(() => {
   const hostId = parseInt(userAgent.value.hostId as string, 10) || 0;
   return [4, 29, 31].includes(hostId);
@@ -109,7 +109,7 @@ const Toast = (title: any) => {
   uni.showToast({
     title,
     duration: 3000,
-    icon: 'none'
+    icon: 'none',
   });
 };
 const curUrl = helper.page();
@@ -264,7 +264,7 @@ const uniRequestPayment = (orderInfo: PayParams) => {
       console.log(res);
       log.event('支付成功', '产品列表页', {
         orderId: props.expandInfo?.orderId,
-        prepayid: (orderInfo.orderInfo as OrderInfoObj)?.prepayid
+        prepayid: (orderInfo.orderInfo as OrderInfoObj)?.prepayid,
       });
 
       Toast('感谢您的赞助!');
@@ -278,7 +278,7 @@ const uniRequestPayment = (orderInfo: PayParams) => {
     },
     complete: () => {
       uni.hideLoading();
-    }
+    },
   };
   console.log('uniRequestPayment::: ', payParams);
   console.log('uniRequestPayment::: ', orderInfo);
@@ -292,13 +292,13 @@ const thirdOrderCreate = (orderId: number, paidType: number, wxCode?: any) => {
     paidType, // 支付方式标识：1 支付宝app 2 微信app 3 微信浏览器（JSAPI） 9 手机浏览器（支付宝）10 手机浏览器（ 微信）
     wxCode,
     quitUrl: curUrl, // 支付宝h5支付，支付失败回调地址
-    returnUrl: props.expandInfo.paySuccessUrl
+    returnUrl: props.expandInfo.paySuccessUrl,
   };
   const url = '/order/center/thirdpay/third-order-create';
   ajax({
     url,
     method: 'POST',
-    data: params
+    data: params,
   })
     .then((res: any) => {
       if (paidType !== 12) {
@@ -361,7 +361,7 @@ const thirdOrderCreate = (orderId: number, paidType: number, wxCode?: any) => {
       } else if (paidType === 10) {
         // const h5_url = res.content;
         // // 返回至指定页面
-        // // const return_url = encodeURIComponent('https://m.xxt.cn')
+        // // const return_url = encodeURIComponent('https://m.demo.cn')
         // window.location.href = `${h5_url}&redirect_url=${encodeURIComponent(
         //   `${props.expandInfo.curHref}&showWxH5Dialog=true`
         // )}`;
@@ -374,13 +374,13 @@ const thirdOrderCreate = (orderId: number, paidType: number, wxCode?: any) => {
           orderInfo: {
             appid: signedOrder.appId, // 微信开放平台 - 应用 - AppId，注意和微信小程序、公众号 AppId 可能不一致
             partnerid: signedOrder.partnerId, // 微信支付商户号
-            prepayid: signedOrder.prepayId // 统一下单订单号
+            prepayid: signedOrder.prepayId, // 统一下单订单号
           },
           timeStamp: signedOrder.timeStamp, // 时间戳（单位：秒）
           nonceStr: signedOrder.nonceStr, // 随机字符串
           package: signedOrder.packageValue, // 固定值
           signType: signedOrder.signType, // 签名算法
-          paySign: signedOrder.paySign // 签名，这里用的 MD5/RSA 签名
+          paySign: signedOrder.paySign, // 签名，这里用的 MD5/RSA 签名
         };
         uniRequestPayment(payParams);
       } else {
@@ -434,7 +434,7 @@ const cannotBuy = (reason: number) => {
 const wxmpBuy = () => {
   if (isLogin.value) {
     uni.showLoading({
-      title: '加载中...'
+      title: '加载中...',
     });
     uni.login({
       provider: 'weixin',
@@ -447,7 +447,7 @@ const wxmpBuy = () => {
       fail(err) {
         Toast(err);
         uni.hideLoading();
-      }
+      },
     });
   } else {
     goToLoginPage();
@@ -573,8 +573,8 @@ watch(
     orderCreateInfo.value = newVal;
   },
   {
-    immediate: true
-  }
+    immediate: true,
+  },
 );
 watch(
   () => paycash,
@@ -585,8 +585,8 @@ watch(
     }
   },
   {
-    immediate: true
-  }
+    immediate: true,
+  },
 );
 </script>
 

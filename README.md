@@ -24,17 +24,17 @@ npm run dev:mp-weixin
 
 常用命令：
 
-| 命令                       | 作用                                                      |
-| -------------------------- | --------------------------------------------------------- |
-| `npm run dev:mp-weixin`    | 运行微信小程序开发环境                                    |
-| `npm run dev:h5`           | 运行 H5 开发环境；本地联调通常需要 `.xxt.cn` 二级域名访问 |
-| `npm run build:mp-weixin`  | 构建微信小程序产物                                        |
-| `npm run build:h5`         | 构建 H5 产物                                              |
-| `npm run type-check`       | 执行 TypeScript / Vue 类型检查                            |
-| `npm run eslint`           | 对 `src` 下 `.vue`、`.ts` 执行 ESLint 自动修复            |
-| `npm run stylelint`        | 对样式文件执行 Stylelint 自动修复                         |
-| `npm run lint:lint-staged` | 执行暂存文件检查                                          |
-| `npm run init:submodule`   | 初始化子模块；只应在项目首次初始化且子模块异常时使用      |
+| 命令                       | 作用                                                       |
+| -------------------------- | ---------------------------------------------------------- |
+| `npm run dev:mp-weixin`    | 运行微信小程序开发环境                                     |
+| `npm run dev:h5`           | 运行 H5 开发环境；本地联调通常需要 `.demo.cn` 二级域名访问 |
+| `npm run build:mp-weixin`  | 构建微信小程序产物                                         |
+| `npm run build:h5`         | 构建 H5 产物                                               |
+| `npm run type-check`       | 执行 TypeScript / Vue 类型检查                             |
+| `npm run eslint`           | 对 `src` 下 `.vue`、`.ts` 执行 ESLint 自动修复             |
+| `npm run stylelint`        | 对样式文件执行 Stylelint 自动修复                          |
+| `npm run lint:lint-staged` | 执行暂存文件检查                                           |
+| `npm run init:submodule`   | 初始化子模块；只应在项目首次初始化且子模块异常时使用       |
 
 `npm run init:submodule` 会重新生成新的 `.git` 目录并重置远程仓库地址。不要在正常开发过程中反复执行。
 

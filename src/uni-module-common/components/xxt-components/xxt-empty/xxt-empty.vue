@@ -5,7 +5,7 @@
         class="empty-tip-image"
         mode="widthFix"
         lazy-load
-        :src="props.tipImage || 'https://static.xxt.cn/nb/gll/common/img/empty.png'"
+        :src="props.tipImage || 'https://static.demo.cn/nb/gll/common/img/empty.png'"
       >
       </image>
     </view>
@@ -28,12 +28,12 @@ import { defineProps } from 'vue';
 const props = defineProps({
   tipMessage: {
     type: String,
-    default: '暂无资源'
+    default: '暂无资源',
   },
   tipImage: {
     type: String,
-    default: ''
-  }
+    default: '',
+  },
 });
 </script>
 

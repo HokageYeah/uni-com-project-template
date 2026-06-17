@@ -25,7 +25,7 @@ const props = withDefaults(
     isSelf?: boolean; // 是否是自己的语音
     messageId?: string | number; // 消息id
   }>(),
-  { voiceUrl: '', voiceTranslate: '', voiceTime: 0, isSelf: true, messageId: '' }
+  { voiceUrl: '', voiceTranslate: '', voiceTime: 0, isSelf: true, messageId: '' },
 );
 const text_size = ref(28);
 // #ifdef MP-WEIXIN
@@ -57,7 +57,7 @@ const calculateVoiceWidth = computed(() => {
   console.log('width', width);
   console.log(
     'Math.min(maxWidth, Math.max(minWidth, width))',
-    Math.min(maxWidth, Math.max(minWidth, width))
+    Math.min(maxWidth, Math.max(minWidth, width)),
   );
   return Math.min(maxWidth, Math.max(minWidth, width));
 });
@@ -90,7 +90,7 @@ const playVoice = () => {
     // 设置音频源
     innerAudioContext.src = tempFilePath;
     // innerAudioContext.src =
-    //   'http://pic.xxt.cn/n/book-reading/book-file/voice/ad7adcb5c45d4138b245e4792771a5481.mp3';
+    //   'http://pic.demo.cn/n/book-reading/book-file/voice/ad7adcb5c45d4138b245e4792771a5481.mp3';
     console.log('playVoice----innerAudioContext.src', innerAudioContext.src);
     // 监听播放结束
     innerAudioContext &&
@@ -124,7 +124,7 @@ onMounted(() => {
         'playVoice----innerAudioContext---1',
         innerAudioContext,
         messageId,
-        props.messageId
+        props.messageId,
       );
       if (innerAudioContext) {
         console.log('playVoice----innerAudioContext---2', innerAudioContext);

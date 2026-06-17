@@ -12,7 +12,7 @@
 import {
   loginInfoDealGradeTerm,
   loginInfoDealMoreIdentity,
-  loginInfoDealSingUserInfo
+  loginInfoDealSingUserInfo,
 } from './login-info';
 import { initReadAPPData } from './loginGetInfo';
 
@@ -25,7 +25,7 @@ import ajax from '@/uni-module-common/http';
 
 // import { useMemberStore } from '@/stores';
 
-// export const baseURL = 'https://rest-test.xxt.cn';
+// export const baseURL = 'https://rest-test.demo.cn';
 export const baseURL = apiBaseUrl;
 let curEnv = 'release';
 // 是否 release 环境
@@ -44,14 +44,14 @@ const initEnv = () => {
       isRelease = false;
 
       // 开发、演示版本时替换全局变量 wx.$baseUrl
-      // wx.$baseUrl.baseRestUrl = 'https://rest-test.xxt.cn'
-      // wx.$baseUrl.baseLoginUrl = 'https://login-test.xxt.cn'
-      // wx.$baseUrl.baseCephUrl = 'https://obs.xxt.cn'
+      // wx.$baseUrl.baseRestUrl = 'https://rest-test.demo.cn'
+      // wx.$baseUrl.baseLoginUrl = 'https://login-test.demo.cn'
+      // wx.$baseUrl.baseCephUrl = 'https://obs.demo.cn'
 
       console.log(
         `================ 当前环境为 ${env}。wx.$baseUrl: ${JSON.stringify(
-          baseURL
-        )} ================`
+          baseURL,
+        )} ================`,
       );
     }
   } catch (e) {
@@ -237,7 +237,7 @@ export const http = <T>(options: UniApp.RequestOptions) => {
     method,
     data,
     // header,
-    custom: { showLoading: false }
+    custom: { showLoading: false },
   });
 
   // 1. 返回 Promise 对象
@@ -261,7 +261,7 @@ export const http = <T>(options: UniApp.RequestOptions) => {
           // 其他错误 -> 根据后端错误信息轻提示
           uni.showToast({
             icon: 'none',
-            title: '请求错误'
+            title: '请求错误',
           });
           reject(res);
         }
@@ -271,10 +271,10 @@ export const http = <T>(options: UniApp.RequestOptions) => {
         console.log('err------', err);
         uni.showToast({
           icon: 'none',
-          title: '网络错误，换个网络试试'
+          title: '网络错误，换个网络试试',
         });
         reject(err);
-      }
+      },
     });
   });
 };
@@ -293,7 +293,7 @@ export const uniRequest = async (obj: any) => {
       method,
       data,
       // header,
-      custom
+      custom,
     });
     console.log('uniRequest-----', result);
     success({ data: result });
@@ -313,7 +313,7 @@ const normalizeUrl = (url: string) => {
   const entry = app.globalData!.entry;
   console.log('normalizeUrl-----', app);
   console.log('normalizeUrl-----entry----', entry);
-  return url ? `https://${entry}.xxt.cn/${url}` : '';
+  return url ? `https://${entry}.demo.cn/${url}` : '';
 };
 
 /**
@@ -328,13 +328,13 @@ const checkEventParams = (eventType: string, _source?: string, _content?: object
     valid = false;
     uni.showModal({
       title: `程序猿/媛请注意！ logEvent.event 方法入参 eventType: ${eventType} 格式错误，必须是字符串！`,
-      showCancel: false
+      showCancel: false,
     });
   } else if (eventType.length === 0) {
     valid = false;
     uni.showModal({
       title: `程序猿/媛请注意！ logEvent.event 方法入参 eventType: ${eventType} 长度为 0，这能记上啥？`,
-      showCancel: false
+      showCancel: false,
     });
   }
   if (_source) {
@@ -342,7 +342,7 @@ const checkEventParams = (eventType: string, _source?: string, _content?: object
       valid = false;
       uni.showModal({
         title: `程序猿/媛请注意！ logEvent.event 方法入参 _source: ${_source} 格式错误，必须是字符串！`,
-        showCancel: false
+        showCancel: false,
       });
     }
   }
@@ -352,7 +352,7 @@ const checkEventParams = (eventType: string, _source?: string, _content?: object
       valid = false;
       uni.showModal({
         title: `程序猿/媛请注意！ logEvent.event 方法入参 _content: ${_content} 格式错误，必须是 json 对象！`,
-        showCancel: false
+        showCancel: false,
       });
     }
 
@@ -364,7 +364,7 @@ const checkEventParams = (eventType: string, _source?: string, _content?: object
         valid = false;
         uni.showModal({
           title: `程序猿/媛请注意！ logEvent.event 方法入参 _content: ${_content} 格式错误，存在嵌套属性 ${key}！`,
-          showCancel: false
+          showCancel: false,
         });
       }
     }
@@ -385,16 +385,16 @@ export const uniEvent = (eventType: string, _source?: string, _content?: object)
     if (checkEventParams(eventType, _source, _content)) {
       console.log(
         `========= ${curEnv} 环境只打印，不实际发送事件日志。currentPageUrl: ${currentPageUrl}, cureventType: ${eventType}, _source: ${_source}, _content: ${JSON.stringify(
-          _content
-        )} =========`
+          _content,
+        )} =========`,
       );
     }
   } else {
     const webId = isLogin.value ? userInfo.value.wid : null;
-    const logUrl = `https://click.xxt.cn/click/eventlog.do?eventLog.eventType=${encodeURI(
-      encodeURI(eventType)
+    const logUrl = `https://click.demo.cn/click/eventlog.do?eventLog.eventType=${encodeURI(
+      encodeURI(eventType),
     )}&eventLog.webId=${webId}&eventLog.currentURL=${encodeURIComponent(
-      normalizeUrl(currentPageUrl)
+      normalizeUrl(currentPageUrl),
     )}&eventLog.source=${_source ? encodeURI(encodeURI(_source)) : ''}&eventLog.content=${
       _content ? encodeURI(encodeURI(JSON.stringify(_content))) : ''
     }`;
@@ -402,7 +402,7 @@ export const uniEvent = (eventType: string, _source?: string, _content?: object)
     console.log('uniEvent-----', logUrl);
     uniRequest({
       url: logUrl,
-      method: 'GET'
+      method: 'GET',
     });
   }
 };
@@ -430,15 +430,15 @@ const getUserMore = () => {
         'userOtherInfo',
         JSON.stringify({
           loginFlag: true,
-          isMore: globalData.isMore
-        })
+          isMore: globalData.isMore,
+        }),
       );
       console.log('--------------全局用户身份-----------------');
       console.log(globalData);
     },
     fail(e) {
       console.log(e);
-    }
+    },
   });
 };
 
@@ -454,7 +454,7 @@ export const dealLoginSuccessResponse = (res) => {
   console.log(res);
   const saveCookie = {
     _SSO_STATE_TICKET: null,
-    _SSO_SAVE_STATE: null
+    _SSO_SAVE_STATE: null,
   };
   res.cookies.forEach((cookie) => {
     if (cookie.startsWith('_SSO_STATE_TICKET=') || cookie.startsWith('_SSO_SAVE_STATE=')) {
@@ -465,7 +465,7 @@ export const dealLoginSuccessResponse = (res) => {
         if (tmp.length === 2) {
           const cookieDataState = {
             value: tmp[1],
-            expires: new Date().getTime() + 7 * 24 * 60 * 60 * 1000
+            expires: new Date().getTime() + 7 * 24 * 60 * 60 * 1000,
           };
           saveCookie[tmp[0]] = cookieDataState;
         }
@@ -484,7 +484,7 @@ export const dealLoginSuccessResponse = (res) => {
   globalData.loginFlag = true;
   globalData.userNowRoleInfo = loginInfoDealSingUserInfo(
     data.userInfo,
-    data.userInfo.xinzxAccountId
+    data.userInfo.xinzxAccountId,
   );
   globalData.deafultGradeTerm = loginInfoDealGradeTerm(globalData);
 
@@ -492,8 +492,8 @@ export const dealLoginSuccessResponse = (res) => {
   uni.setStorageSync(
     'userOtherInfo',
     JSON.stringify({
-      loginFlag: true
-    })
+      loginFlag: true,
+    }),
   );
 };
 const loginByWxApplet = () => {
@@ -511,7 +511,7 @@ const loginByWxApplet = () => {
         data: {
           entry: globalData.entry,
           code: res.code,
-          loginDefault: true
+          loginDefault: true,
         },
         success(res) {
           console.log(`静默登录cookie:${res.cookies}`);
@@ -529,9 +529,9 @@ const loginByWxApplet = () => {
           // wx.$log.info(`静默登录失败原因:${e}`);
           // log.info(`静默登录失败原因：${e}`);
           console.log(e);
-        }
+        },
       });
-    }
+    },
   });
 };
 /**
@@ -559,7 +559,7 @@ export const init = (gd: any) => {
     const value = `wxmp.${nowMills}.${randomString(13)}`;
     globalData.cookieMap.xxtSessionId = {
       value,
-      expires: -1
+      expires: -1,
     };
   }
   uni.setStorageSync('cookieMap', JSON.stringify(globalData.cookieMap));
@@ -625,7 +625,7 @@ export const init = (gd: any) => {
       method: 'GET',
       data: {
         entry: globalData.entry,
-        loginDefault: true
+        loginDefault: true,
       },
       success(res) {
         const data = res.data;
@@ -641,7 +641,7 @@ export const init = (gd: any) => {
       fail(e) {
         console.log(e);
         loginByWxApplet();
-      }
+      },
     });
   }
   if (isNeedWxLogin) {
@@ -665,7 +665,7 @@ export const init = (gd: any) => {
 //         // 其他环境发送页面浏览日志
 //         const webId = globalData.loginFlag ? globalData.userNowRoleInfo['webId'] : null;
 //         const logUrl =
-//             'https://click.xxt.cn/click/statrecord.do?cr.url=' +
+//             'https://click.demo.cn/click/statrecord.do?cr.url=' +
 //             encodeURIComponent(normalizeUrl(url)) +
 //             '&cr.referURL=' +
 //             encodeURIComponent(normalizeUrl(referer)) +

@@ -35,7 +35,7 @@ export const aiAssistant = () => {
   // 是否主动关闭连接
   let meClose = false;
   // 地址 写你的后端连接地址
-  let url = 'wss://aichat.xxt.cn';
+  let url = 'wss://aichat.demo.cn';
   // 重连定时器
   let Time: any = null;
   // WebSocket 连接次数
@@ -71,7 +71,7 @@ export const aiAssistant = () => {
       url,
       success(data) {
         clearInterval(XTime); // 关闭心跳定时器=
-      }
+      },
     });
     socketTask.onOpen((res) => {
       if (sendMsgFlag) {
@@ -122,7 +122,7 @@ export const aiAssistant = () => {
         stopBtnShow.value = false;
         aiStore.setLoading(false);
         aiStore.setIsAnswerComplete(true);
-      }
+      },
     });
   };
   // 手动关闭连接
@@ -136,7 +136,7 @@ export const aiAssistant = () => {
         Time = null;
         // 确保已经关闭
         socketTask = null;
-      }
+      },
     });
   };
 
@@ -185,7 +185,7 @@ export const aiAssistant = () => {
       index: questionAnswerList.value.length,
       type,
       detailId,
-      recordId
+      recordId,
     };
     if (!isappend) {
       aiStore.addAnswerQuestionMsg(msgdata);
@@ -193,7 +193,7 @@ export const aiAssistant = () => {
       aiStore.replaceAnswerQuestionMsg({
         obj: msgdata,
         index: questionAnswerList.value.length - 1,
-        chatType: 3
+        chatType: 3,
       });
     }
   }
@@ -203,7 +203,7 @@ export const aiAssistant = () => {
       token: token.value,
       chatTypeId: chatTypeId.value,
       questionContent: questionContent.value,
-      answerContent: answerContent.value
+      answerContent: answerContent.value,
     };
     if (recordId.value) {
       params.recordId = recordId.value;
@@ -214,7 +214,7 @@ export const aiAssistant = () => {
     instance?.proxy
       ?.$uniAjax({
         url: '/csc/aigc/save-chat-content',
-        method: 'POST'
+        method: 'POST',
       })
       .then((res) => {
         detailId.value = res.detailId;
@@ -224,12 +224,12 @@ export const aiAssistant = () => {
         aiStore.setQuestionAnswerDetailId({
           detailId: detailId.value,
           recordId: recordId.value,
-          index: one
+          index: one,
         });
         aiStore.setQuestionAnswerDetailId({
           detailId: detailId.value,
           recordId: recordId.value,
-          index: two
+          index: two,
         });
         aiStore.setIsRegenerate(false);
       })
@@ -237,7 +237,7 @@ export const aiAssistant = () => {
         uni.showToast({
           title: err.message.answerContent || '网络异常，请稍后重试',
           duration: 3000,
-          icon: 'none'
+          icon: 'none',
         });
       });
   }
@@ -281,6 +281,6 @@ export const aiAssistant = () => {
     setQuestionAnswerDetailId: aiStore.setQuestionAnswerDetailId,
     clearQuestionAnswerList: aiStore.clearQuestionAnswerList,
     UnshiftAnswerQuestionMsg: aiStore.UnshiftAnswerQuestionMsg,
-    setIsRegenerate: aiStore.setIsRegenerate
+    setIsRegenerate: aiStore.setIsRegenerate,
   };
 };

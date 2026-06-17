@@ -7,7 +7,7 @@ import config from './config.json';
 import { projectModuleConfig } from '@/uni-module-common/config/all-common-config';
 import type {
   appCommonConfigType,
-  projectItemConfigType
+  projectItemConfigType,
 } from '@/uni-module-common/config/all-common-config';
 
 // 接口域名
@@ -63,7 +63,7 @@ const versionCode = manifest.versionCode;
 const mode = import.meta.env.MODE;
 // 构建时间。在 build/utils.ts 中指定
 const buildTime = import.meta.env.VITE_BUILD_TIME;
-const baseCephUrl = 'https://obs-prod.xxt.cn';
+const baseCephUrl = 'https://obs-prod.demo.cn';
 console.log(
   `工程配置。  apiBaseUrl 接口域名: ${apiBaseUrl}, apiUrlPrefix 接口前缀: ${apiUrlPrefix},` +
     ` clickBaseUrl 点击日志接口域名: ${clickBaseUrl}, clickUrlPrefix 点击日志接口前缀: ${clickUrlPrefix},` +
@@ -71,7 +71,7 @@ console.log(
     ` $cdn 静态资源 CDN 域名: ${$cdn},` +
     ` versionName: ${versionName}, versionCode: ${versionCode},` +
     ` mode: ${mode}, 打包时间: ${buildTime},` +
-    ` 未登录时不跳转登录API白名单noLoginApiWhiteList: ${noLoginApiWhiteList}`
+    ` 未登录时不跳转登录API白名单noLoginApiWhiteList: ${noLoginApiWhiteList}`,
 );
 
 export {
@@ -89,5 +89,5 @@ export {
   uploadBaseUrl, // 上传接口域名
   noLoginApiWhiteList, // 在接口返回未登录的时候，不跳转登录页面接口白名单
   baseCephUrl,
-  appModuleConfig // project-module-config各个文件的配置
+  appModuleConfig, // project-module-config各个文件的配置
 };
