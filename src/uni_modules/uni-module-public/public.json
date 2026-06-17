@@ -1,0 +1,74 @@
+{
+  "subPackages": {
+    "root": "uni_modules/uni-module-public",
+    "name": "xxtUniModulePublic",
+    "pages": [
+      {
+        "path": "login/login",
+        "name": "login",
+        "aliasPath": "/",
+        "style": {
+          "navigationBarTitleText": "登录",
+          "navigationBarBackgroundColor": "#4ad975",
+          "navigationBarTextStyle": "white",
+          "componentPlaceholder": {
+            "star": "view"
+          }
+        }
+      },
+      {
+        "path": "weChatFileSelect/index",
+        "name": "weChatFileSelect",
+        "aliasPath": "/",
+        "style": {
+          "navigationBarTitleText": "选取文件",
+          "navigationBarBackgroundColor": "#4ad975",
+          "navigationBarTextStyle": "white",
+          "enablePullDownRefresh": false
+        },
+        // #ifdef MP-WEIXIN
+        "independent": true
+        // #endif
+      },
+      {
+        "path": "web-to-h5/web-to-h5",
+        "name": "WebToH5",
+        "style": {
+          "navigationBarTitleText": "网页中转",
+          "navigationBarBackgroundColor": "#FFFFFF",
+          "navigationBarTextStyle": "black"
+        }
+      },
+      {
+        "path": "export-data/exporting/exporting",
+        "name": "PublicExportDataExporting",
+        "style": {
+          "navigationBarTitleText": "处理中",
+          "navigationBarBackgroundColor": "#4ad975",
+          "navigationBarTextStyle": "white"
+        }
+      },
+      {
+        "path": "export-data/pc-down/pc-down",
+        "name": "PublicExportDataPCDown",
+        "style": {
+          "navigationBarTitleText": "下载到电脑",
+          "navigationBarBackgroundColor": "#4ad975",
+          "navigationBarTextStyle": "white"
+        }
+      },
+      {
+        "path": "export-data/pc-success/pc-success",
+        "name": "PublicExportDataPCSuccess",
+        "style": {
+          "navigationBarTitleText": "传输成功",
+          "navigationBarBackgroundColor": "#4ad975",
+          "navigationBarTextStyle": "white"
+        }
+      }
+    ]
+  },
+  "mainPath": "../../pages.json",
+  "copyMainPath": "../../pages-copy.json",
+  "envDevelopmentPath": "../../../.env.development"
+}
