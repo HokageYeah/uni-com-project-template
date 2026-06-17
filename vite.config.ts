@@ -26,13 +26,13 @@ const setProjectConfigKey = (envsParams: string, path: string) => {
 const setProjectConfigJson = (envsParams: string) => {
   // 读取目录下所有的文件名
   const files: string[] = fs.readdirSync(
-    `./src/uni-module-common/config/project-json-config/${envsParams}`
+    `./src/uni-module-common/config/project-json-config/${envsParams}`,
   );
   // 遍历文件名
   for (const file of files) {
     const filePath = path.resolve(
       __dirname,
-      `./src/uni-module-common/config/project-json-config/${envsParams}/${file}`
+      `./src/uni-module-common/config/project-json-config/${envsParams}/${file}`,
     );
     // 模块工程暂不复制json
     if (fs.statSync(filePath).isFile() && !file.endsWith('.json')) {
@@ -60,14 +60,15 @@ export default ({ command, mode }: ConfigEnv): UserConfigExport => {
   const root = process.cwd();
   const env = loadEnv(mode, root);
   // 获取命令行后面的参数
-  const envsParams = (process.argv.slice(2).pop() as string) || 'couple-diary';
+  let envsParams = process.argv.slice(2).pop() as string;
   if (!projectConfigKeyAry.includes(envsParams)) {
-    console.log(`❌❌❌请传入正确的参数，参数必须是${projectConfigKeyAry.toString()}其中之一`);
-    process.exit();
+    envsParams = 'couple-diary';
+    // console.log(`❌❌❌请传入正确的参数，参数必须是${projectConfigKeyAry.toString()}其中之一`);
+    // process.exit();
   }
   setProjectConfigKey(
     envsParams,
-    path.resolve(__dirname, './src/uni-module-common/config/config.json')
+    path.resolve(__dirname, './src/uni-module-common/config/config.json'),
   );
   setProjectConfigJson(envsParams);
   // process.exit();
@@ -90,13 +91,13 @@ export default ({ command, mode }: ConfigEnv): UserConfigExport => {
       alias: [
         {
           find: /\/#\//,
-          replacement: `${pathResolve('types')}/`
+          replacement: `${pathResolve('types')}/`,
         },
         {
           find: '@',
-          replacement: `${pathResolve('src')}/`
-        }
-      ]
+          replacement: `${pathResolve('src')}/`,
+        },
+      ],
     },
     plugins: [
       uni(),
@@ -104,7 +105,7 @@ export default ({ command, mode }: ConfigEnv): UserConfigExport => {
         name: 'test',
         configResolved(config) {
           // console.log('config.resolve.alias查看----', config.resolve.alias);
-        }
+        },
       },
       AutoImportTypes(),
       AutoImport({
@@ -115,24 +116,24 @@ export default ({ command, mode }: ConfigEnv): UserConfigExport => {
           'pinia',
           {
             from: 'uni-mini-router',
-            imports: ['createRouter', 'useRouter', 'useRoute']
+            imports: ['createRouter', 'useRouter', 'useRoute'],
           },
           {
-            '@/uni-module-common/helper/pinia-auto-refs': ['useStore']
-          }
+            '@/uni-module-common/helper/pinia-auto-refs': ['useStore'],
+          },
         ],
         exclude: ['createApp'],
         eslintrc: {
           enabled: true,
-          globalsPropValue: true
-        }
+          globalsPropValue: true,
+        },
       }),
       Unocss(),
       PiniaAutoRefs({
         storeDir: 'src/uni-module-common/store',
         excludes: ['index'],
-        outputFile: 'src/uni-module-common/helper/pinia-auto-refs.ts'
-      })
+        outputFile: 'src/uni-module-common/helper/pinia-auto-refs.ts',
+      }),
     ],
     css: {
       postcss: {
@@ -143,20 +144,20 @@ export default ({ command, mode }: ConfigEnv): UserConfigExport => {
             // 需要转换的最小像素值，默认1px
             minPixelValue: 1,
             // 转换的精度，默认5
-            decimalPlaces: 5
-          })
-        ] // 这里添加px2rpx插件，就可以在项目中使用px了，而且px2rpx插件会自动转换
-      }
+            decimalPlaces: 5,
+          }),
+        ], // 这里添加px2rpx插件，就可以在项目中使用px了，而且px2rpx插件会自动转换
+      },
     },
     define: {
-      ROUTES: new TransformPages().routes // 注入路由表
+      ROUTES: new TransformPages().routes, // 注入路由表
     },
     server: {
       // 本地开发环境通过代理实现跨域，生产环境使用 nginx 转发
       // base: VITE_PUBLIC_PATH, // 生产环境路径
       host: true,
       port: VITE_PORT, // 端口号
-      proxy: createProxy(VITE_PROXY)
+      proxy: createProxy(VITE_PROXY),
     },
     // 发布build时删除 console
     build: {
@@ -165,10 +166,10 @@ export default ({ command, mode }: ConfigEnv): UserConfigExport => {
         compress: {
           // 生产环境时移除console
           drop_console: VITE_DROP_CONSOLE,
-          drop_debugger: VITE_DROP_CONSOLE
-        }
-      }
-    }
+          drop_debugger: VITE_DROP_CONSOLE,
+        },
+      },
+    },
     // ,
     // build: {
     //   target: 'es2015',
