@@ -1,6 +1,6 @@
 # uni-com-project-template UniApp 前端工程说明
 
-`uni-com-project-template` 是一个基uni-com-project-templateiApp、Vue 3、TypeScript、Vite 的多端前端工程。当前工程定位是可复用的业务脚手架：公共层提供启动、配置、请求、鉴权、登录态、路由、组件库和基础上传能力；具体业务项目只应该在业务模块中接入自己的登录协议、权限协议、接口协议和页面实现。
+`uni-com-project-template` 是一个基uni-app、Vue 3、TypeScript、Vite 的多端前端工程。当前工程定位是可复用的业务脚手架：公共层提供启动、配置、请求、鉴权、登录态、路由、组件库和基础上传能力；具体业务项目只应该在业务模块中接入自己的登录协议、权限协议、接口协议和页面实现。
 
 本文档同时面向两类读者：
 
