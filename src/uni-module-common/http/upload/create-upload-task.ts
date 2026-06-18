@@ -3,11 +3,11 @@ import eventBus from '@/uni-module-common/utils/eventBus';
 import {
   cancelUploadEvent,
   uploadProgressEvent,
-  uploadTaskEvent,
+  uploadTaskEvent
 } from '@/uni-module-common/http/upload/upload-events';
 import type {
   UploadProgressPayload,
-  UploadTaskPayload,
+  UploadTaskPayload
 } from '@/uni-module-common/http/upload/upload-types';
 
 /**
@@ -20,7 +20,7 @@ export const userAgentPrefix = `task-center-${versionCode}`;
  * 上传链路统一的 Referer。
  * 这里只迁移常量位置，不改变原有请求头协议。
  */
-export const referer = `${userAgentPrefix}.demo.cn`;
+export const referer = `${userAgentPrefix}.xxt.cn`;
 
 /**
  * 绑定上传任务与公共事件总线。
@@ -29,10 +29,10 @@ export const referer = `${userAgentPrefix}.demo.cn`;
 export const bindUploadTaskLifecycle = (
   uploadTask: any,
   logPrefix: string,
-  onProgressUpdate?: (payload: UploadProgressPayload) => void,
+  onProgressUpdate?: (payload: UploadProgressPayload) => void
 ) => {
   const taskPayload: UploadTaskPayload = {
-    uploadTask,
+    uploadTask
   };
   eventBus.emit(uploadTaskEvent, taskPayload);
 

@@ -1,6 +1,15 @@
 import { createHttpClient } from '@/uni-module-common/http/core/create-http-client';
 import { normalizeResponseMeta } from '@/uni-module-common/http/core/normalize-response';
-import { getLegacyRequestErrorMessage } from '@/uni-module-common/http/core/request-error';
+import {
+  REQUEST_API_ERROR_MARKER,
+  REQUEST_API_MARKER
+} from '@/uni-module-common/http/core/request-api-bridge';
+import {
+  getHttpFallbackErrorMessage,
+  getResponseDisplayMessage,
+  isBusinessErrorResponse,
+  isBusinessSuccessResponse
+} from '@/uni-module-common/http/core/response-feedback';
 import { createRequestApi } from '@/uni-module-common/http/request';
 import { resolveRequestUrl } from '@/uni-module-common/http/core/resolve-request-url';
 import { saveResponseCookiesForLegacyLogin } from '@/uni-module-common/http/legacy/cookie-bridge';
@@ -180,10 +189,20 @@ instance.interceptors.response.use(
     //   $store('user').setToken(response.header.authorization || response.header.Authorization);
     // }
     response.config?.custom?.showLoading && closeLoading();
+    console.info('[公共请求] 收到响应', {
+      接口地址: response.config?.url || '',
+      请求方法: response.config?.method || '',
+      HTTP状态码: response.statusCode
+    });
+
     if (response.data?.error != null && response.data.error !== 0) {
+      console.warn('[公共请求] 命中旧协议业务异常分支：error != 0', {
+        接口地址: response.config?.url || '',
+        错误码: response.data?.error
+      });
       if (response.config.custom?.showError) {
         uni.showToast({
-          title: response.data.message || '服务器开小差啦,请稍后再试~',
+          title: getResponseDisplayMessage(response.data, '服务器开小差啦,请稍后再试~'),
           duration: 3000,
           icon: 'none',
           mask: false
@@ -199,6 +218,63 @@ instance.interceptors.response.use(
     // 获取接口：白名单接口不触发统一未登录跳转，避免登录页和公开接口被错误拦截。
     const isAPIWhiteList = noLoginApiWhiteList.some((item: string) => item.includes(url as string));
     const responseMeta = normalizeResponseMeta(res);
+    console.info('[公共请求] 响应归一化结果', {
+      接口地址: `${url || ''}`,
+      请求方法: response.config.method,
+      状态码: responseMeta.status,
+      业务码: responseMeta.code,
+      ret类型: responseMeta.retType,
+      文案: responseMeta.message
+    });
+
+    if (isBusinessErrorResponse(res) && !isAPIWhiteList) {
+      if (isUnauthorizedResponseData(`${url || ''}`, res)) {
+        /**
+         * 接口已经明确返回“未登录”时，请求层统一清空最小会话并跳登录页。
+         * 这样页面和请求的未登录兜底都会走同一条链路。
+         */
+        console.warn(
+          '[公共鉴权] 接口返回未登录状态，准备清空登录态并跳转登录页',
+          getSafeRequestLogContext(
+            `${url || ''}`,
+            response.config.method,
+            responseMeta.status,
+            responseMeta.code
+          )
+        );
+        httpAuthAdapter.clearLoginState();
+        await httpAuthAdapter.redirectToLogin(getCurrentRedirectUrl());
+        return Promise.reject(createAuthRedirectError('接口返回未登录状态'));
+      }
+
+      if (responseMeta.status === 400) {
+        uni.showToast({
+          title: getResponseDisplayMessage(res, '参数异常'),
+          duration: 3000,
+          icon: 'none',
+          mask: false
+        });
+      } else {
+        uni.showToast({
+          title: getResponseDisplayMessage(res, '请求接口时发生异常，请稍后再试'),
+          duration: 3000,
+          icon: 'none',
+          mask: false
+        });
+      }
+
+      console.warn(
+        '[公共请求] 按统一协议处理业务异常响应',
+        getSafeRequestLogContext(
+          `${url || ''}`,
+          response.config.method,
+          responseMeta.status,
+          responseMeta.code
+        )
+      );
+      return Promise.reject(res);
+    }
+
     if (
       responseMeta.isObject &&
       responseMeta.code !== undefined &&
@@ -217,7 +293,7 @@ instance.interceptors.response.use(
         httpAuthAdapter.clearLoginState();
         await httpAuthAdapter.redirectToLogin(getCurrentRedirectUrl());
         return Promise.reject(createAuthRedirectError('接口返回未登录状态'));
-      } else if (res.status === 400) {
+      } else if (responseMeta.status === 400) {
         uni.showToast({
           title: '参数异常',
           duration: 3000,
@@ -226,7 +302,7 @@ instance.interceptors.response.use(
         });
       } else {
         uni.showToast({
-          title: res.message || '请求接口时发生异常，请稍后再试',
+          title: getResponseDisplayMessage(res, '请求接口时发生异常，请稍后再试'),
           duration: 3000,
           icon: 'none',
           mask: false
@@ -239,12 +315,16 @@ instance.interceptors.response.use(
       return Promise.reject(res);
     }
     if (
-      response.data.error === 0 &&
-      response.data.msg !== '' &&
+      isBusinessSuccessResponse(response.data) &&
+      getResponseDisplayMessage(response.data, '') !== '' &&
       response.config.custom?.showSuccess
     ) {
+      console.info('[公共请求] 命中成功提示展示分支', {
+        接口地址: `${url || ''}`,
+        展示文案: response.config.custom.successMsg || getResponseDisplayMessage(response.data, '')
+      });
       uni.showToast({
-        title: response.config.custom.successMsg || response.data.msg,
+        title: response.config.custom.successMsg || getResponseDisplayMessage(response.data, ''),
         duration: 3000,
         icon: 'none',
         mask: false
@@ -267,7 +347,7 @@ instance.interceptors.response.use(
     // 登录信息鉴权处理
     // const userStore = $store('user');
     // const isLogin = userStore.isLogin;
-    const errorMessage = getLegacyRequestErrorMessage(error, httpAuthAdapter.isLoggedIn());
+    const errorMessage = getHttpFallbackErrorMessage(error, httpAuthAdapter.isLoggedIn());
     if (error?.statusCode === 401) {
       httpAuthAdapter.clearLoginState();
       void httpAuthAdapter.redirectToLogin(getCurrentRedirectUrl());
@@ -276,15 +356,36 @@ instance.interceptors.response.use(
       error.config.custom.showLoading && closeLoading();
       error.config.custom?.showError &&
         uni.showToast({
-          title: error.data?.msg || errorMessage,
+          title: getResponseDisplayMessage(error?.data ?? error, errorMessage),
           duration: 3000,
           icon: 'none',
           mask: false
         });
     }
     console.warn('[公共请求] 网络请求失败处理完成', {
+      状态码: error?.statusCode,
       错误提示: errorMessage
     });
+
+    if (error?.config?.[REQUEST_API_MARKER]) {
+      const normalizedMeta = normalizeResponseMeta(error?.data ?? error);
+      const normalizedErrorPayload = {
+        [REQUEST_API_ERROR_MARKER]: true,
+        message: getResponseDisplayMessage(error?.data ?? error, errorMessage),
+        statusCode: error?.statusCode ?? normalizedMeta.status,
+        code: normalizedMeta.code,
+        raw: error?.data ?? error
+      };
+
+      console.warn('[公共请求] 识别到 request<T>() 专用标记，返回结构化失败结果', {
+        状态码: normalizedErrorPayload.statusCode,
+        业务码: normalizedErrorPayload.code,
+        错误文案: normalizedErrorPayload.message
+      });
+
+      return Promise.resolve(normalizedErrorPayload);
+    }
+
     // {"code":1,"message":"任务不存在或已删除","status":500}
     // return Promise.reject(new Error(errorMessage));
     return false;

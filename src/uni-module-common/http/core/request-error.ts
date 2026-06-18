@@ -1,4 +1,5 @@
 import type { RequestError } from '@/uni-module-common/http/types';
+import { normalizeResponseMeta } from '@/uni-module-common/http/core/normalize-response';
 
 /**
  * 生成请求错误对象。
@@ -20,7 +21,20 @@ export function createRequestError(error: RequestError): RequestError {
 export function getLegacyRequestErrorMessage(error: any, isLoggedIn: boolean) {
   let errorMessage = '网络请求出错';
 
+  // 新版统一响应协议优先级更高，只要能读到真实文案就直接返回。
+  const normalizedMeta = normalizeResponseMeta(error?.data ?? error);
+  if (normalizedMeta.message) {
+    console.info('[公共请求] 命中新版统一错误文案', {
+      状态码: normalizedMeta.status,
+      业务码: normalizedMeta.code,
+      ret类型: normalizedMeta.retType,
+      错误文案: normalizedMeta.message
+    });
+    return normalizedMeta.message;
+  }
+
   if (error !== undefined && error !== null) {
+    // 以下是历史 HTTP 状态码到中文提示的映射，主要用于网络层或非标准业务响应兜底。
     switch (error.statusCode) {
       case 400:
         errorMessage = '请求错误';
@@ -73,5 +87,9 @@ export function getLegacyRequestErrorMessage(error: any, isLoggedIn: boolean) {
     // #endif
   }
 
+  console.info('[公共请求] 使用历史错误文案兜底', {
+    状态码: error?.statusCode,
+    错误文案: errorMessage
+  });
   return errorMessage;
 }
